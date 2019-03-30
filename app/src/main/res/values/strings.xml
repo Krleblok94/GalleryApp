@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Gallery App</string>
+    <string name="take_a_photo">Take a photo</string>
+    <string name="the_gallery_is_empty">The gallery is empty</string>
+    <string name="share">Share</string>
+    <string name="send_to">Send to</string>
+    <string name="sharing_image_please_wait">Sharing image, please wait</string>
+</resources>
