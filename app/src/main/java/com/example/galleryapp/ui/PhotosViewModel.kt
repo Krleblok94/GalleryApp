@@ -30,14 +30,14 @@ class PhotosViewModel(private val photoRepository: PhotoRepository) : ViewModel(
     }
 
     fun sharePhoto(context: Context, glide: GlideRequests) {
-        photoRepository.sharePhoto(context, photo.value?.data?.picture, glide, _shareStatus)
+        photoRepository.sharePhoto(context, photo.value?.data, glide, _shareStatus)
     }
 
     fun savePhoto(path: String?, timestamp: Long?) {
         if (path != null && timestamp != null) {
             photoRepository.savePhoto(Photo(timestamp.toString(),
                 "This photo was taken with the phone's camera", path,
-                DateUtils.convertToStringFromTimestamp(timestamp), timestamp,
+                DateUtils.convertToStringFromTimestamp(timestamp), timestamp, true,
                 "Photo #${photos.value?.data?.size?.plus(1)}"))
         }
     }

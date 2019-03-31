@@ -2,6 +2,7 @@ package com.example.galleryapp.repository
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.galleryapp.R
@@ -34,6 +35,7 @@ class PhotoRepository(private val appExecutors: AppExecutors,
                 }
                 photo.picture = "https://picsum.photos/600/300/?image=$randomInt"
                 photo.timestamp = DateUtils.convertToTimestampFromString(photo.publishedAt)
+                photo.takenByUser = false
             }
             appDatabase.photoDao().insertPhotos(item)
         }
@@ -70,20 +72,25 @@ class PhotoRepository(private val appExecutors: AppExecutors,
         }
     }
 
-    fun sharePhoto(context: Context, imageUri: String?, glide: GlideRequests, shareStatus: MutableLiveData<Int>) {
-        if (imageUri != null) {
+    fun sharePhoto(context: Context, photo: Photo?, glide: GlideRequests, shareStatus: MutableLiveData<Int>) {
+        if (photo != null) {
             appExecutors.diskIO().execute {
                 shareStatus.postValue(Constants.Status.LOADING)
+                val imageUri: Uri = if (photo.takenByUser) {
+                    FileUtils.getLocalBitmapUri(context, photo.picture)
+                } else {
+                    FileUtils.getUrlBitmapUri(context, glide.asBitmap().load(photo.picture).submit().get())
+                }
+
                 val shareIntent: Intent = Intent().apply {
                     action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_STREAM,
-                        FileUtils.getLocalBitmapUri(context, glide.asBitmap().load(imageUri).submit().get()))
+                    putExtra(Intent.EXTRA_STREAM, imageUri)
                     type = "image/jpeg"
                 }
 
                 shareStatus.postValue(Constants.Status.SUCCESS)
-                context.startActivity(Intent.createChooser(shareIntent,
-                    context.resources.getText(R.string.send_to)))
+                context.startActivity(Intent.createChooser(shareIntent, context.resources
+                    .getText(R.string.send_to)))
             }
         }
     }

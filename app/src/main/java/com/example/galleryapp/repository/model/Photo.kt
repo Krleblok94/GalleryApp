@@ -22,6 +22,7 @@ data class Photo(
     @Expose
     val publishedAt: String,
     var timestamp: Long = 0,
+    var takenByUser: Boolean,
     @SerializedName("title")
     @Expose
     val title: String? = "") {

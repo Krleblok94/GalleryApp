@@ -35,7 +35,14 @@ object FileUtils {
         }
     }
 
-    fun getLocalBitmapUri(context: Context, bitmap: Bitmap) : Uri {
+    // This is used to get the uri if the photo is taken by the user and the image file is already in the
+    // device's memory
+    fun getLocalBitmapUri(context: Context, path: String) : Uri =
+        FileProvider.getUriForFile(context, "com.example.galleryapp.fileprovider", File(path))
+
+    // For url related images, the photo first has to be downloaded to a local temporary file to create a uri
+    // for sharing
+    fun getUrlBitmapUri(context: Context, bitmap: Bitmap) : Uri {
         timestamp = System.currentTimeMillis()
         val file = File.createTempFile("image_${timestamp}_",".jpg", context.filesDir)
         val fileOutputStream = FileOutputStream(file)
