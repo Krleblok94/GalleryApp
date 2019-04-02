@@ -31,7 +31,7 @@ class PhotoRepository(private val appExecutors: AppExecutors,
                 var randomInt = random.nextInt(0, 500)
                 // If it's one of the missing id's, get a random number until it's not in the collection
                 while (missingPhotoIds.contains(randomInt)) {
-                    randomInt = random.nextInt(0, 450)
+                    randomInt = random.nextInt(0, 500)
                 }
                 photo.picture = "https://picsum.photos/600/300/?image=$randomInt"
                 photo.timestamp = DateUtils.convertToTimestampFromString(photo.publishedAt)

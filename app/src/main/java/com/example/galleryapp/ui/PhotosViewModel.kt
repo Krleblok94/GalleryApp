@@ -18,7 +18,10 @@ class PhotosViewModel(private val photoRepository: PhotoRepository) : ViewModel(
     val shareStatus: LiveData<Int>
         get() = _shareStatus
 
-    val photos = photoRepository.loadPhotos()
+    val photos by lazy {
+        photoRepository.loadPhotos()
+    }
+
     val photo = Transformations.switchMap(photoId) {
         photoRepository.loadPhoto(it)
     }
